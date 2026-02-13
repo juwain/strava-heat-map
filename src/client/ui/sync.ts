@@ -9,8 +9,8 @@ export interface SyncOptions {
  * Initialize the sync button functionality.
  */
 export function initSyncButton(options: SyncOptions): void {
-  const syncBtn = document.getElementById('sync-btn') as HTMLButtonElement | null;
-  const statusEl = document.getElementById('status');
+  const syncBtn = document.querySelector('.sync-btn') as HTMLButtonElement | null;
+  const statusEl = document.querySelector('.status');
 
   if (!syncBtn || !statusEl) {
     console.warn('Sync button or status element not found');

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strava Heatmap</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="map"></div>
+
+  <div class="controls">
+    <div class="mode-toggles">
+      <button class="mode-toggle active" data-mode="heatmap">Heatmap</button>
+      <button class="mode-toggle" data-mode="lines">Lines</button>
+    </div>
+    <div class="toggles">
+      <button class="toggle active" data-filter="all">All</button>
+      <button class="toggle" data-filter="bicycle">Bicycle</button>
+      <button class="toggle" data-filter="running">Running</button>
+      <button class="toggle" data-filter="walking">Walking</button>
+    </div>
+    <button class="sync-btn">Sync</button>
+    <span class="status"></span>
+  </div>
+
+  <div class="stats"></div>
+
+  <div class="auth-prompt hidden">
+    <a href="/auth">Connect to Strava</a>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script type="module">
+    // Initialize the app from the compiled bundle
+    if (window.HeatMapApp && window.HeatMapApp.initApp) {
+      window.HeatMapApp.initApp();
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

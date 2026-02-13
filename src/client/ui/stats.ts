@@ -37,11 +37,11 @@ export function calculateStats(activities: Activity[]): StatsByCategory {
  * Update the stats panel in the DOM with activity statistics.
  */
 export function updateStats(activities: Activity[]): void {
-  const statsEl = document.getElementById('stats');
+  const statsEl = document.querySelector('.stats') as HTMLElement;
   if (!statsEl) return;
 
   if (activities.length === 0) {
-    statsEl.style.display = 'none';
+    statsEl.classList.add('hidden');
     return;
   }
 
@@ -52,7 +52,7 @@ export function updateStats(activities: Activity[]): void {
     const km = kmByCategory[cat];
     if (km === 0) continue;
     html += `<div class="stat-row">
-      <span><span class="stat-dot" style="background:${LINE_COLORS[cat]}"></span>${STAT_LABELS[cat]}</span>
+      <span><span class="stat-dot stat-dot-${cat}"></span>${STAT_LABELS[cat]}</span>
       <span class="stat-km">${formatKm(km)}</span>
     </div>`;
   }
@@ -64,5 +64,5 @@ export function updateStats(activities: Activity[]): void {
   </div>`;
 
   statsEl.innerHTML = html;
-  statsEl.style.display = 'block';
+  statsEl.classList.remove('hidden');
 }
