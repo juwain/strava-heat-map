@@ -81,15 +81,48 @@ export async function getAccessToken(config: StravaConfig): Promise<string | nul
   return tokens.access_token;
 }
 
+interface FetchWithAuthOptions {
+  url: string;
+  config: StravaConfig;
+  logger: FastifyLoggerInstance;
+}
+
+async function fetchWithAuth({ url, config, logger }: FetchWithAuthOptions): Promise<Response> {
+  let accessToken = await getAccessToken(config);
+
+  let response = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  // If 401, try refreshing token once
+  if (response.status === 401) {
+    logger.info('Received 401, attempting token refresh');
+
+    const tokens = await readTokens();
+    if (tokens?.refresh_token) {
+      try {
+        accessToken = await refreshAccessToken(tokens.refresh_token, config);
+        response = await fetch(url, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        logger.info('Token refresh successful, request retried');
+      } catch (refreshErr) {
+        logger.error({ error: refreshErr }, 'Token refresh failed, tokens may be expired');
+        // Re-throw with clear message for full re-auth
+        throw new Error('Authentication expired. Please re-connect your Strava account.');
+      }
+    } else {
+      throw new Error('Not authenticated');
+    }
+  }
+
+  return response;
+}
+
 export async function fetchNewActivities(
   config: StravaConfig,
   logger: FastifyLoggerInstance,
 ): Promise<SyncResult> {
-  const accessToken = await getAccessToken(config);
-  if (!accessToken) {
-    throw new Error('Not authenticated');
-  }
-
   const cache = await readActivities();
   const existingIds = new Set(cache.activities.map((a) => a.id));
   const newActivities: Activity[] = [];
@@ -102,8 +135,10 @@ export async function fetchNewActivities(
     url.searchParams.set('page', String(page));
     url.searchParams.set('per_page', String(ACTIVITIES_PER_PAGE));
 
-    const response = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${accessToken}` },
+    const response = await fetchWithAuth({
+      url: url.toString(),
+      config,
+      logger,
     });
 
     if (!response.ok) {
