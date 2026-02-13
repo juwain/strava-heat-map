@@ -22,7 +22,7 @@ export function registerApiRoutes(
       if (
         message.includes('Not authenticated') ||
         message.includes('Token refresh failed') ||
-        message.includes('Strava API error 401')
+        message.includes('Authentication expired')
       ) {
         return reply.status(401).send({
           statusCode: 401,
