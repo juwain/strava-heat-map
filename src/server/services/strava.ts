@@ -56,7 +56,8 @@ export async function refreshAccessToken(
   });
 
   if (!response.ok) {
-    throw new Error('Token refresh failed');
+    const body = await response.text();
+    throw new Error(`Token refresh failed: ${response.status} ${body}`);
   }
 
   const refreshed = (await response.json()) as StravaToken;
