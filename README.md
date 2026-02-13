@@ -15,7 +15,7 @@ A Strava activity visualization web application that displays your athletic acti
 
 ## Screenshots
 
-<!-- TODO: Add screenshots of the application -->
+<img width="1228" height="833" alt="Screenshot 2026-02-13 at 14 42 35" src="https://github.com/user-attachments/assets/75265bd3-512c-410e-bf4d-3ed28d2a3059" />
 
 ## Tech Stack
 
