@@ -100,7 +100,6 @@
   font-family: system-ui, sans-serif;
   font-size: 13px;
   line-height: 1.6;
-  display: none;
 }
 
 .stats .stat-row {
@@ -119,19 +118,19 @@
 }
 
 .stats .stat-dot-bicycle {
-  background: #fc4c02;
+  background: #00bfff;
 }
 
 .stats .stat-dot-running {
-  background: #fc4c02;
+  background: #ff4500;
 }
 
 .stats .stat-dot-walking {
-  background: #fc4c02;
+  background: #00e850;
 }
 
 .stats .stat-dot-other {
-  background: #888;
+  background: #d4d4d4;
 }
 
 .stats .stat-km {
