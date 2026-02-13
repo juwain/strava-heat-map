@@ -23,7 +23,11 @@ function initMap(): L.Map {
     ? BASE_LAYERS[savedBase]
     : BASE_LAYERS['Dark Matter'];
 
-  const map = L.map('map').setView([51.505, -0.09], 13);
+  const mapContainer = document.querySelector('.map') as HTMLElement;
+  if (!mapContainer) {
+    throw new Error('Map container not found');
+  }
+  const map = L.map(mapContainer).setView([51.505, -0.09], 13);
 
   // Add the default base layer
   const defaultLayer = L.tileLayer(baseLayerConfig.url, {
@@ -93,10 +97,10 @@ async function loadActivities(map: L.Map): Promise<void> {
   try {
     const res = await fetch('/api/activities');
     if (res.status === 401) {
-      const authPrompt = document.getElementById('auth-prompt');
-      const controls = document.getElementById('controls');
-      if (authPrompt) authPrompt.style.display = 'block';
-      if (controls) controls.style.display = 'none';
+      const authPrompt = document.querySelector('.auth-prompt');
+      const controls = document.querySelector('.controls');
+      if (authPrompt) authPrompt?.classList.remove('hidden');
+      if (controls) controls?.classList.add('hidden');
       return;
     }
 
@@ -106,9 +110,9 @@ async function loadActivities(map: L.Map): Promise<void> {
       render(map);
     }
 
-    const statusEl = document.getElementById('status');
+    const statusEl = document.querySelector('.status');
     if (statusEl) {
-      statusEl.textContent = `${allActivities.length} activities`;
+      (statusEl as HTMLElement).textContent = `${allActivities.length} activities`;
     }
   } catch (err) {
     console.error('Failed to load activities', err);
@@ -149,13 +153,4 @@ export function initApp(): void {
 
   // Load initial activities
   loadActivities(map);
-}
-
-// Start the app when DOM is ready
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initApp);
-  } else {
-    initApp();
-  }
 }
